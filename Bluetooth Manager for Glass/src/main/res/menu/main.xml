@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/showPaired"
+        android:title="@string/show_pared_devices"/>
+    <item
+        android:id="@+id/pairNew"
+        android:title="@string/pair_new_device"/>
+</menu>

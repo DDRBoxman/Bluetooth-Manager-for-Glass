@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Bluetooth Manager for Glass</string>
+    <string name="manage_bluetooth">manage bluetooth</string>
+    <string name="show_pared_devices">Show Paired Devices</string>
+    <string name="pair_new_device">Pair New Device</string>
+    <string name="unpair">Un-Pair</string>
+    <string name="pair">Pair</string>
+
+    <plurals name="numberOfPairedDevices">
+        <item quantity="one">One device paired.</item>
+        <item quantity="other">%d devices paired.</item>
+    </plurals>
+</resources>
