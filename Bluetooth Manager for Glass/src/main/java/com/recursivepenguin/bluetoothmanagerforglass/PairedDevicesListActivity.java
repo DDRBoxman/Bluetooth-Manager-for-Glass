@@ -3,6 +3,8 @@ package com.recursivepenguin.bluetoothmanagerforglass;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.Context;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -10,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 
+import com.google.android.glass.media.Sounds;
 import com.google.android.glass.widget.CardScrollView;
 
 import java.lang.reflect.Method;
@@ -50,7 +53,8 @@ public class PairedDevicesListActivity extends Activity implements AdapterView.O
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         mSelectedDevice = (BluetoothDevice) mCardScrollView.getItemAtPosition(position);
-        Util.playSound(this, R.raw.sound_tap);
+        AudioManager audio = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        audio.playSoundEffect(Sounds.TAP);
         openOptionsMenu();
     }
 
