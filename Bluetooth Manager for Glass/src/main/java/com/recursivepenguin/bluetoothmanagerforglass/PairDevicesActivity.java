@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -114,7 +115,7 @@ public class PairDevicesActivity extends Activity implements AdapterView.OnItemC
             Method m = device.getClass().getMethod("createBond", (Class[]) null);
             m.invoke(device, (Object[]) null);
         } catch (Exception e) {
-
+            Log.e("pairDevice", "Exception thrown", e);
         }
     }
 }

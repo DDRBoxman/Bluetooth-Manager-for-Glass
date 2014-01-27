@@ -6,6 +6,7 @@ import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.media.AudioManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -85,7 +86,7 @@ public class PairedDevicesListActivity extends Activity implements AdapterView.O
             mBondedDevices.remove(device);
             adapter.notifyDataSetChanged();
         } catch (Throwable th) {
-
+            Log.e("removeBond", "Exception thrown", th);
         }
     }
 }
