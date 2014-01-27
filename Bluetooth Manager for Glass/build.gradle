@@ -22,7 +22,7 @@ android {
 
     defaultConfig {
         minSdkVersion 15
-        targetSdkVersion 19
+        targetSdkVersion 15
     }
 
     compileOptions {
