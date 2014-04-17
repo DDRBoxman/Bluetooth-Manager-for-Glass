@@ -26,12 +26,7 @@ public class BluetoothDeviceCardScrollAdapter extends CardScrollAdapter {
     }
 
     @Override
-    public int findIdPosition(Object id) {
-        return -1;
-    }
-
-    @Override
-    public int findItemPosition(Object item) {
+    public int getPosition(Object item) {
         return mBondedDevices.indexOf(item);
     }
 
