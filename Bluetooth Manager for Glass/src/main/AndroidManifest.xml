@@ -26,6 +26,10 @@
 
         <activity android:name=".PairDevicesActivity"/>
 
+        <activity android:name=".ble.BleDevicesActivity" />
+
+        <activity android:name=".ble.BleServicesActivity" />
+
     </application>
 
 </manifest>
