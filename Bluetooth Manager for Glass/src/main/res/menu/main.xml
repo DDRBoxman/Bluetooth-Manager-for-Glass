@@ -7,4 +7,7 @@
     <item
         android:id="@+id/pairNew"
         android:title="@string/pair_new_device"/>
+    <item
+        android:id="@+id/scanBle"
+      android:title="@string/scan_for_ble_devices" />
 </menu>
