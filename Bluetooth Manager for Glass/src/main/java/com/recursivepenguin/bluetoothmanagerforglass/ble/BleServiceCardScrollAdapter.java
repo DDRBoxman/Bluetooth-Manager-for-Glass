@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.glass.widget.CardScrollAdapter;
+import com.movisens.smartgattlib.Service;
 import com.recursivepenguin.bluetoothmanagerforglass.R;
 
 import java.util.List;
@@ -60,8 +61,8 @@ public class BleServiceCardScrollAdapter extends CardScrollAdapter {
         }
 
         BluetoothGattService service = getItem(position);
-        holder.name.setText(service.getUuid().toString());
-        holder.type.setText(service.getType());
+        holder.name.setText(Service.lookup(service.getUuid(), service.getUuid().toString()));
+        holder.type.setText(context.getResources().getQuantityString(R.plurals.ble_service_count_charas, service.getCharacteristics().size()));
 
         return convertView;
     }

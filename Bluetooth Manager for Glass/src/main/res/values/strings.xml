@@ -8,6 +8,13 @@
     <string name="pair">Pair</string>
     <string name="connect">Connect</string>
     <string name="rssi_value">%1$ddb</string>
+    <string name="ble_service_type">type %1$d</string>
+    <string name="show_values">Show values</string>
+    <string name="read_value">Read value</string>
+    <plurals name="ble_service_count_charas">
+        <item quantity="one">%1$d characteristic</item>
+        <item quantity="other">%1$d characteristics</item>
+    </plurals>
 
     <plurals name="numberOfPairedDevices">
         <item quantity="one">One device paired.</item>

@@ -11,6 +11,7 @@ import android.widget.AdapterView;
 
 import com.google.android.glass.media.Sounds;
 import com.google.android.glass.widget.CardScrollView;
+import com.recursivepenguin.bluetoothmanagerforglass.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +35,8 @@ public class BleServicesActivity extends Activity implements AdapterView.OnItemC
     private BluetoothGattService mSelectedService;
     private BluetoothGatt mBluetoothGatt;
     private BluetoothManager mBluetoothManager;
+    private BleCharacteristicCardScrollAdapter charAdapter;
+    private BluetoothGattCharacteristic mSelectedCharacteristic;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,8 +68,15 @@ public class BleServicesActivity extends Activity implements AdapterView.OnItemC
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        //TODO
+        inflater.inflate(R.menu.service, menu);
 
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.read_value).setVisible(charAdapter != null);
+        menu.findItem(R.id.show_values).setVisible(charAdapter == null);
         return true;
     }
 
@@ -74,19 +84,49 @@ public class BleServicesActivity extends Activity implements AdapterView.OnItemC
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection.
         switch (item.getItemId()) {
+            case R.id.show_values:
+                showValuesForSelectedService();
+                mCardScrollView.setSelection(0);
+                return true;
+            case R.id.read_value:
+                readValueForSelectedCharacteristic();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
+    private void readValueForSelectedCharacteristic() {
+        mBluetoothGatt.readCharacteristic(mSelectedCharacteristic);
+    }
+
+    private void showValuesForSelectedService() {
+        charAdapter = new BleCharacteristicCardScrollAdapter(this, mSelectedService.getCharacteristics());
+        mCardScrollView.setAdapter(charAdapter);
+    }
+
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        if (charAdapter == null) {
+            onServiceClick(position);
+        } else {
+            onCharacteristicClick(position);
+        }
+    }
+
+    private void onServiceClick(int position) {
         AudioManager audio = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         audio.playSoundEffect(Sounds.TAP);
         mSelectedService = adapter.getItem(position);
         openOptionsMenu();
     }
 
+    private void onCharacteristicClick(int position) {
+        AudioManager audio = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        audio.playSoundEffect(Sounds.TAP);
+        mSelectedCharacteristic = charAdapter.getItem(position);
+        openOptionsMenu();
+    }
 
     /**
      * Connects to the GATT server hosted on the Bluetooth LE device.
@@ -179,16 +219,7 @@ public class BleServicesActivity extends Activity implements AdapterView.OnItemC
             if (newState == BluetoothProfile.STATE_CONNECTED) {
                 mConnectionState = STATE_CONNECTED;
 
-                BluetoothDevice btDevice = gatt.getDevice();
-
-                if (btDevice.getBondState() == BluetoothDevice.BOND_NONE) {
-                    btDevice.createBond();
-                    gatt.getDevice().setPairingConfirmation(true);
-                }
-
-                if (btDevice.getBondState() == BluetoothDevice.BOND_BONDED) {
-                    mBluetoothGatt.discoverServices();
-                }
+                mBluetoothGatt.discoverServices();
 
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                 close();
@@ -226,7 +257,15 @@ public class BleServicesActivity extends Activity implements AdapterView.OnItemC
             Log.d(TAG, "status " + status);
 
             if (status == BluetoothGatt.GATT_SUCCESS) {
-                // TODO
+                runOnUiThread(
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                showValuesForSelectedService();
+                            }
+                        }
+                );
+
             }
         }
 
