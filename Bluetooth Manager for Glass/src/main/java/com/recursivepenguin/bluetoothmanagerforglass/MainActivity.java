@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.google.android.glass.media.Sounds;
 import com.google.android.glass.touchpad.Gesture;
 import com.google.android.glass.touchpad.GestureDetector;
+import com.recursivepenguin.bluetoothmanagerforglass.ble.BleDevicesActivity;
 
 import java.util.Set;
 
@@ -74,6 +75,9 @@ public class MainActivity extends Activity {
                 return true;
             case R.id.pairNew:
                 startActivity(new Intent(this, PairDevicesActivity.class));
+                return true;
+            case R.id.scanBle:
+                startActivity(new Intent(this, BleDevicesActivity.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
