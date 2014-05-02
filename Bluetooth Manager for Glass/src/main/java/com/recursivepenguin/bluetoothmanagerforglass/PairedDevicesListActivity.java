@@ -34,6 +34,7 @@ public class PairedDevicesListActivity extends Activity implements AdapterView.O
         super.onCreate(savedInstanceState);
 
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        Log.d("onCreate", "Got default BT adapter.");
 
         mCardScrollView = new CardScrollView(this);
         mCardScrollView.activate();
@@ -63,7 +64,6 @@ public class PairedDevicesListActivity extends Activity implements AdapterView.O
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.device, menu);
-
         return true;
     }
 
@@ -80,6 +80,7 @@ public class PairedDevicesListActivity extends Activity implements AdapterView.O
 
     private void removeBond(BluetoothDevice device) {
         try {
+            Log.d("removeBond", "Unpairing BT device " + device.getName() + "...");
             Class<?> btDeviceInstance =  Class.forName(BluetoothDevice.class.getCanonicalName());
             Method removeBondMethod = btDeviceInstance.getMethod("removeBond");
             removeBondMethod.invoke(device);
@@ -87,6 +88,8 @@ public class PairedDevicesListActivity extends Activity implements AdapterView.O
             adapter.notifyDataSetChanged();
         } catch (Throwable th) {
             Log.e("removeBond", "Exception thrown", th);
+            return;
         }
+        Log.d("removeBond", "Device " + device.getName() + " unpaired.");
     }
 }

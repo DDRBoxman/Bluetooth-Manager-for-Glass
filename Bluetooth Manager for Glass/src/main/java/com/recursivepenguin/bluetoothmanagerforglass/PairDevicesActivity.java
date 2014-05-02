@@ -42,8 +42,10 @@ public class PairDevicesActivity extends Activity implements AdapterView.OnItemC
 
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         registerReceiver(mReceiver, filter);
+        Log.d("onCreate", "Got default BT adapter and registered receiver.");
 
         mBluetoothAdapter.startDiscovery();
+        Log.d("onCreate", "Started BT discovery...");
 
         mCardScrollView = new CardScrollView(this);
         mCardScrollView.activate();
@@ -57,17 +59,19 @@ public class PairDevicesActivity extends Activity implements AdapterView.OnItemC
     protected void onDestroy() {
         super.onDestroy();
 
-        if (mBluetoothAdapter.isDiscovering())
+        if (mBluetoothAdapter.isDiscovering()) {
             mBluetoothAdapter.cancelDiscovery();
+            Log.d("onDestroy", "Canceled BT discovery.");
+        }
 
         unregisterReceiver(mReceiver);
+        Log.d("onDestroy", "Unregistered receivers.");
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.pair, menu);
-
         return true;
     }
 
@@ -76,8 +80,10 @@ public class PairDevicesActivity extends Activity implements AdapterView.OnItemC
         // Handle item selection.
         switch (item.getItemId()) {
             case R.id.pair:
-                if (mBluetoothAdapter.isDiscovering())
+                if (mBluetoothAdapter.isDiscovering()) {
                     mBluetoothAdapter.cancelDiscovery();
+                    Log.d("onOptionsItemSelected", "Canceled BT discovery.");
+                }
                 pairDevice(mSelectedDevice);
                 return true;
             default:
@@ -112,10 +118,13 @@ public class PairDevicesActivity extends Activity implements AdapterView.OnItemC
 
     private void pairDevice(BluetoothDevice device) {
         try {
+            Log.d("pairDevice", "Pairing BT device " + device.getName() + "...");
             Method m = device.getClass().getMethod("createBond", (Class[]) null);
             m.invoke(device, (Object[]) null);
         } catch (Exception e) {
             Log.e("pairDevice", "Exception thrown", e);
+            return;
         }
+        Log.d("pairDevice", "Device " + device.getName() + " paired.");
     }
 }
