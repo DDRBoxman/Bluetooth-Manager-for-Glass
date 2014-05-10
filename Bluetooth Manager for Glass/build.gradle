@@ -12,13 +12,10 @@ repositories {
     mavenCentral()
 }
 
-dependencies {
-    compile files('src/main/libs/gdk.jar')
-}
-
 android {
-    compileSdkVersion 19
+    compileSdkVersion "Google Inc.:Glass Development Kit Preview:19"
     buildToolsVersion '19.0.3'
+
     defaultConfig {
         minSdkVersion 19
         targetSdkVersion 19
