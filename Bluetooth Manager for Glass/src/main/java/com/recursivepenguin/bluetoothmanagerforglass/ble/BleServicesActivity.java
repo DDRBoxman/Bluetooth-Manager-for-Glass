@@ -14,6 +14,7 @@ import com.google.android.glass.widget.CardScrollView;
 import com.recursivepenguin.bluetoothmanagerforglass.R;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class BleServicesActivity extends Activity implements AdapterView.OnItemClickListener {
@@ -75,8 +76,14 @@ public class BleServicesActivity extends Activity implements AdapterView.OnItemC
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        menu.findItem(R.id.read_value).setVisible(charAdapter != null);
-        menu.findItem(R.id.show_values).setVisible(charAdapter == null);
+        MenuItem readValue = menu.findItem(R.id.read_value);
+        if (readValue != null)
+            readValue.setVisible(charAdapter != null);
+
+        MenuItem showValues = menu.findItem(R.id.show_values);
+        if (showValues != null)
+            showValues.setVisible(charAdapter == null);
+
         return true;
     }
 
@@ -139,12 +146,19 @@ public class BleServicesActivity extends Activity implements AdapterView.OnItemC
      * callback.
      */
     public boolean connect(final String address, BluetoothGattCallback gattCallback) {
+        final BluetoothDevice device;
+
         if (mBluetoothAdapter == null || address == null) {
             Log.w(TAG, "BluetoothAdapter not initialized or unspecified type.");
             return false;
         }
 
-        final BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
+        try {
+            device = mBluetoothAdapter.getRemoteDevice(address);
+        } catch (IllegalArgumentException ex) {
+            Log.w(TAG, "Device address not found.  Unable to connect.");
+            return false;
+        }
 
         // Previously connected device.  Try to reconnect.
         if (mBleDeviceAddress != null && address.equals(mBleDeviceAddress)
@@ -160,10 +174,6 @@ public class BleServicesActivity extends Activity implements AdapterView.OnItemC
             }
         }
 
-        if (device == null) {
-            Log.w(TAG, "Device not found.  Unable to connect.");
-            return false;
-        }
         // We want to directly connect to the device, so we are setting the autoConnect
         // parameter to false.
         mBluetoothGatt = device.connectGatt(this, false, gattCallback);
@@ -253,7 +263,7 @@ public class BleServicesActivity extends Activity implements AdapterView.OnItemC
         public void onCharacteristicRead(BluetoothGatt gatt,
                                          BluetoothGattCharacteristic characteristic,
                                          int status) {
-            Log.d(TAG, "value received from" + characteristic.getUuid() + ": " + characteristic.getValue());
+            Log.d(TAG, "value received from" + characteristic.getUuid() + ": " + Arrays.toString(characteristic.getValue()));
             Log.d(TAG, "status " + status);
 
             if (status == BluetoothGatt.GATT_SUCCESS) {
@@ -278,7 +288,7 @@ public class BleServicesActivity extends Activity implements AdapterView.OnItemC
         @Override
         public void onCharacteristicChanged(BluetoothGatt gatt,
                                             BluetoothGattCharacteristic characteristic) {
-            Log.d(TAG, "changed value received from " + characteristic.getUuid() + ": " + characteristic.getValue());
+            Log.d(TAG, "changed value received from " + characteristic.getUuid() + ": " + Arrays.toString(characteristic.getValue()));
         }
 
         @Override
