@@ -12,27 +12,24 @@ repositories {
     mavenCentral()
 }
 
-dependencies {
-    compile files('src/main/libs/gdk.jar')
-}
-
 android {
-    compileSdkVersion 19
-    buildToolsVersion "19.0.3"
+    compileSdkVersion "Google Inc.:Glass Development Kit Preview:19"
+    buildToolsVersion '19.0.3'
 
     defaultConfig {
         minSdkVersion 19
         targetSdkVersion 19
     }
-
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7
     }
     buildTypes {
         release {
-            runProguard false
+            runProguard true
             proguardFile getDefaultProguardFile('proguard-android-optimize.txt')
+            jniDebugBuild false
+            zipAlign true
         }
     }
     productFlavors {

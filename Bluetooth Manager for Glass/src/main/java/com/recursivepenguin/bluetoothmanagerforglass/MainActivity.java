@@ -48,7 +48,8 @@ public class MainActivity extends Activity {
     protected void onResume() {
         super.onResume();
 
-        imageView.setImageResource(mBluetoothAdapter.isEnabled() ? R.drawable.ic_bluetooth_on_big : R.drawable.ic_bluetooth_off_big);
+        imageView.setImageResource(mBluetoothAdapter.isEnabled() ? R.drawable.ic_bluetooth_on_big :
+                                                                   R.drawable.ic_bluetooth_off_big);
 
         mBondedDevices = mBluetoothAdapter.getBondedDevices();
         int count = mBondedDevices.size();
@@ -61,7 +62,6 @@ public class MainActivity extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main, menu);
-
         return true;
     }
 
@@ -108,6 +108,4 @@ public class MainActivity extends Activity {
         }
         return false;
     }
-
-
 }

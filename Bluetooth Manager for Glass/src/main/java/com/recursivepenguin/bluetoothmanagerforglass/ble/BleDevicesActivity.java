@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.*;
 import android.widget.AdapterView;
 
@@ -32,8 +33,10 @@ public class BleDevicesActivity extends Activity implements AdapterView.OnItemCl
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        Log.d("onCreate", "Got default BT adapter.");
 
         mBluetoothAdapter.startLeScan(this);
+        Log.d("onCreate", "Started BTLE discovery...");
 
         mCardScrollView = new CardScrollView(this);
         mCardScrollView.activate();
@@ -49,13 +52,13 @@ public class BleDevicesActivity extends Activity implements AdapterView.OnItemCl
         super.onDestroy();
 
         mBluetoothAdapter.stopLeScan(this);
+        Log.d("onDestroy", "Canceled BTLE discovery.");
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.ble, menu);
-
         return true;
     }
 
@@ -67,14 +70,14 @@ public class BleDevicesActivity extends Activity implements AdapterView.OnItemCl
                 Intent intent = new Intent(this, BleServicesActivity.class);
                 intent.putExtra(BleServicesActivity.EXTRA_DEVICE_ADDRESS, mSelectedDevice.getAddress());
                 startActivity(intent);
+                Log.d("onOptionsItemSelected", "Connecting to device " + mSelectedDevice.getName() + "...");
                 mBluetoothAdapter.stopLeScan(this);
+                Log.d("onOptionsItemSelected", "Canceled BTLE discovery.");
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
-
-
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -84,12 +87,10 @@ public class BleDevicesActivity extends Activity implements AdapterView.OnItemCl
         openOptionsMenu();
     }
 
-
     @Override
     public void onLeScan(BluetoothDevice device, int rssi, byte[] bytes) {
 
         if (device.getName() != null) {
-
             BleDevice bleDevice = new BleDevice(device, rssi);
 
             if (!mDevices.contains(bleDevice)) {
@@ -108,8 +109,6 @@ public class BleDevicesActivity extends Activity implements AdapterView.OnItemCl
                     mCardScrollView.setAdapter(adapter);
                 }
             });
-
         }
     }
-
 }
